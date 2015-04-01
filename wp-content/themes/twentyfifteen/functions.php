@@ -378,3 +378,28 @@ function my_profile_update( $user_id, $old_user_data ) {
             curl_close ($curl);
 	}	
 }
+
+//function to register user in moodle on registration to wordpress
+add_action( 'user_register', 'appusers_init' );
+function appusers_init($user_id) {
+    global $wpdb;
+    
+    if(isset($_POST) && $_POST['action'] == 'createuser')
+    {
+        $result = $wpdb->get_results('Select * From wp_users Where ID = "'.$user_id.'"');
+        $username = $result[0]->user_login;
+        $useremail = $_POST['email'];
+        $firstname = $_POST['first_name'];
+        $lastname = $_POST['last_name'];
+        $password = $result[0]->user_pass;
+        
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, home_url()."/moodle/updateUser.php");
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, "username=$username&useremail=$useremail&firstname=$firstname&lastname=$lastname&password=$password&action=insert");
+
+        $response = curl_exec ($curl);
+        curl_close ($curl);
+    }    
+}
