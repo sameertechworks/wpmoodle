@@ -356,3 +356,25 @@ do_shortcode('[wp2moodle group="group2"]A hyperlink[/wp2moodle]');
 //}
 //
 //add_filter( 'login_redirect', 'my_login_redirect', 10, 3 );
+//function on user profile update
+add_action( 'profile_update', 'my_profile_update', 10, 2 );
+
+function my_profile_update( $user_id, $old_user_data ) {
+        global $wpdb;
+	if(isset($_POST) && isset($_POST['user_id']))
+	{
+            $result = $wpdb->get_results('Select * From wp_users Where ID = "'.$user_id.'"');
+            $userPass = $result[0]->user_pass;
+            $firstName = $_POST['first_name'];
+            $lastName = $_POST['last_name'];
+            $email = $_POST['email'];
+            $userName = $result[0]->user_login;            
+            $url = home_url()."/moodle/updateUser.php?userPass=$userPass&firstName=$firstName&lastName=$lastName&userEmail=$email&userName=$userName&action=update";
+            
+            $curl = curl_init();
+            curl_setopt ($curl, CURLOPT_URL, $url);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+            $result = curl_exec ($curl);
+            curl_close ($curl);
+	}	
+}
