@@ -65,7 +65,7 @@ add_action('wp_logout', 'wp2moodle_logout');
 
 function wp2moodle_logout() {
     
-    $url = 'https://www.wordpress.com/moodle/auth/wp2moodle/logout.php';
+    $url = home_url().'/moodle/auth/wp2moodle/logout.php';
     header('location: '.$url);
     exit;
 //    echo "<iframe id='logout' src='".$url."'></iframe>";
@@ -76,7 +76,7 @@ function wp2moodle_logout() {
  * activating the default values
 */
 function wp2m_activate() {
-	add_option('wp2m_moodle_url', 'http://localhost/moodle');
+	add_option('wp2m_moodle_url', home_url().'/moodle');
 	add_option('wp2m_shared_secret', 'enter a random sequence of letters, numbers and symbols here');
 	add_option('wp2m_update_details', 'true');
 }
