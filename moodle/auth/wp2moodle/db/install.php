@@ -22,5 +22,7 @@
 function xmldb_local_sop_install() {
     global $DB, $CFG;
     
-    $DB->set_field('mdl_role_capabilities', 'permission', 0, array ('capability' => 'moodle/user:editownprofile'));
+    $DB->delete_records('role_capabilities', array ('capability' =>'moodle/user:editownprofile'));
+    $DB->delete_records('role_capabilities', array ('capability' =>'moodle/user:changeownpassword'));
+    
 }
